@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "498315441656",
+    "project_id": "smart-steps-387608",
+    "storage_bucket": "smart-steps-387608.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498315441656:android:beac871963283fff2bd20d",
+        "android_client_info": {
+          "package_name": "com.smartsteps.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498315441656-ldgifom7ok7o9mk6ur7fh62ufq083hk5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz6t4V8p3GRgoetqY2gmKBIZVmMYyiZuU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498315441656-ldgifom7ok7o9mk6ur7fh62ufq083hk5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "498315441656-7iqtfas8h0vc6339h74ncvj5cup6d1bq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smartsteps.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498315441656:android:3c5c352420fbc1e82bd20d",
+        "android_client_info": {
+          "package_name": "com.smartsteps.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498315441656-ldgifom7ok7o9mk6ur7fh62ufq083hk5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz6t4V8p3GRgoetqY2gmKBIZVmMYyiZuU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498315441656-ldgifom7ok7o9mk6ur7fh62ufq083hk5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "498315441656-7iqtfas8h0vc6339h74ncvj5cup6d1bq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smartsteps.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,2 @@
+export const WALLET_ITEM = 'WALLET_ITEM';
+export const WALLET_API_STATUS = 'WALLET_API_STATUS';
