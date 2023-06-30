@@ -33,7 +33,7 @@ export default class RegisterScreen extends Component<{}> {
         showErroMessage: false,
         referalCode: '',
         placement: "Left",
-        isOptpSend: false
+        isOptpSend: true
     }
     regValidation: any = {
         email: true,

@@ -15,12 +15,13 @@ interface PropsData {
   extraHeaderStyle?;
   loaderVisible?:boolean;
   isBack?:boolean;
-  scrollEnable?:boolean
+  scrollEnable?:boolean,
+  type?:string
 }
-const MainLayout = ({ children, style = {}, extraHeaderStyle = {}, loaderVisible = false,isBack=false,scrollEnable=true }:PropsData) => {
+const MainLayout = ({ children, style = {}, extraHeaderStyle = {}, loaderVisible = false,isBack=false,scrollEnable=true,type='dark' }:PropsData) => {
   const navigation = useNavigation();
   return (
-    <View style={[Theming.LayoutContainer, style]} ref={navigatorRef => { }}>
+    <View style={[(type=='dark')?Theming.LayoutContainer:Theming.LayoutContainerLight, style]} ref={navigatorRef => { }}>
       <AnimatedLoader
         visible={loaderVisible}
         overlayColor="rgba(255,255,255,0.75)"

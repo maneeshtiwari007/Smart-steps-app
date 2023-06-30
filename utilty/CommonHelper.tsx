@@ -44,5 +44,13 @@ export const CommonHelper = {
             token:coin?.label,
             paymentMethod:"CryptoCurrency"
         }
+    },
+    suStringText(mytextvar:string,maxlimit:number){
+        console.log((mytextvar).length);
+        console.log(maxlimit);
+        console.log((mytextvar).substring(0,maxlimit-3));
+       return ((mytextvar).length > maxlimit) ? 
+        (((mytextvar).substring(0,maxlimit-3)) + '...') : 
+        mytextvar
     }
 }

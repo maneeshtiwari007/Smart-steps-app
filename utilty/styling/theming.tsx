@@ -8,6 +8,12 @@ const Theming = StyleSheet.create({
         paddingTop: 0,
         marginBottom: 0
     },
+    LayoutContainerLight: {
+        flex: 1,
+        backgroundColor: Colors.gray_light,
+        paddingTop: 0,
+        marginBottom: 0
+    },
     LoginLayoutContainer: {
         flex: 1,
         backgroundColor: Colors.primary_color,
@@ -31,20 +37,57 @@ const Theming = StyleSheet.create({
     headerRightIconContainer: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between',     
+    },
+    iconStyle:{
+        width: 38,
+        height: 38,
+        borderColor: Colors.primary_color,
+        borderWidth: 1,
+        borderRadius: 50,
+        backgroundColor: '#ffcc00',
+        justifyContent: "center",
+        alignItems: "center",    
+        position: "relative",   
+        flexDirection: "row",
+        fontSize: Colors.FontSize.f14,
+        fontFamily: 'Inter_600SemiBold',
+        fontWeight: '600',
     },
     headerRightIcon: {
-        width: 35,
-        height: 35,
+        width: 38,
+        height: 38,
         alignItems: 'center',
         justifyContent: 'center'
     },
     headerLeftUserIcon: {
-        width: 30,
-        height: 30,
-        borderColor: Colors.light_crystal_blue,
-        borderWidth: 2,
-        borderRadius: 8
+        width: 38,
+        height: 38,
+        borderColor: Colors.primary_color,
+        borderWidth: 1,
+        borderRadius: 50,
+        justifyContent: "center",
+        alignItems: "center",    
+        position: "relative",   
+        flexDirection: "row",
+    },
+    badgeWarning: {
+        fontSize: 7,
+        fontFamily: 'Inter_600SemiBold',
+        fontWeight: '600',
+        backgroundColor: '#ffcc00',
+        padding: 3,
+        paddingLeft: 5,
+        paddingRight: 5,
+        borderRadius: 50,
+        position: "absolute",
+        bottom: -5,
+        left: 0,
+        width: '100%',
+        textAlign: "center",
+        zIndex: 99, 
+        justifyContent: "center",
+        alignItems: "center", 
     },
     button: {
         backgroundColor: Colors.light_crystal_blue,
@@ -115,8 +158,9 @@ const Theming = StyleSheet.create({
         width: '48%',
         marginBottom: '4%',
         cardTitle: {
-            fontSize: 14,
-            color: Colors.light_crystal_blue
+            fontSize: 10,
+            textTransform: 'capitalize',
+            color: Colors.light_crystal_blue,
         }
     },
     lottie: {
@@ -139,7 +183,7 @@ const Theming = StyleSheet.create({
         minHeight: '100%',
         backgroundColor: Colors.primary_color,
         width: '100%',
-        top:0
+        top: 0
     },
     numPad: {
         marginBottom: 15,
@@ -153,10 +197,10 @@ const Theming = StyleSheet.create({
         marginRight: 10,
         marginLeft: 10
     },
-    pTagWhite:{
-        color:Colors.white,
-        fontSize:Colors.FontSize.f12,
-        marginBottom:5
+    pTagWhite: {
+        color: Colors.white,
+        fontSize: Colors.FontSize.f12,
+        marginBottom: 5
     }
 
 });

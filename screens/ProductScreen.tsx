@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { useSelector } from "react-redux";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { CommonHelper } from "../utilty/CommonHelper";
+import { ThemeStyling } from "../utilty/styling/Styles";
 
 class ProductSscreen extends Component<{}> {
     state = {
@@ -26,34 +27,34 @@ class ProductSscreen extends Component<{}> {
         buyModal: false,
         buttonSiubmit: { label: 'Confirm', isDisable: 'false' },
         coinData: [],
-        selectedProduct:{},
-        selectedCoin:{}
+        selectedProduct: {},
+        selectedCoin: {}
     }
     constructor(props: {} | Readonly<{}>) {
         super(props);
     }
     handleSelectIndex(index) {
         this.setState({ selectedIndex: index });
-        if(index!==""){
-            this.setState({loader:true})
+        if (index !== "") {
+            this.setState({ loader: true })
             CommonApiRequest.getProduct(index).then((response) => {
-                this.setState({loader:false})
+                this.setState({ loader: false })
                 this.setState({ productData: response?.data })
                 this.setState({ loader: false });
-            }).catch(()=>{
-                this.setState({loader:false})
+            }).catch(() => {
+                this.setState({ loader: false })
             });
         }
     }
     handleSelectIndexBuy(index) {
         this.setState({ selectedIndeBuy: index });
-        
+
     }
     componentDidMount() {
         this.setState({ loader: true });
-        CommonApiRequest.storeProductCategory({}).then((response)=>{
+        CommonApiRequest.storeProductCategory({}).then((response) => {
             //console.log(response);
-            if(response?.success){
+            if (response?.success) {
                 response?.data?.forEach((entry) => {
                     if (!this.state.allCategory?.find(item => item.label === entry)) {
                         this.state.allCategory.push({ label: entry, value: entry });
@@ -92,30 +93,30 @@ class ProductSscreen extends Component<{}> {
         this.setState({ buyModal: type });
     }
     async initBuyProduct() {
-        if(this.state.selectedCoin?.label){
-        const sendToAPi = await CommonHelper.formatBuyProductData(this.state.selectedProduct,this.state.selectedCoin);
-        this.setState({buttonSiubmit: { label: 'Please wait...', isDisable: 'true' }});
-        CommonApiRequest.customerBuyProduct(sendToAPi).then((response)=>{
-            this.setState({buttonSiubmit: { label: 'Confirm', isDisable: 'false' }});
-            if(response?.success){
-                alert("Thank you for order");
-                this.setState({ buyModal: false });
-            }
-        });
+        if (this.state.selectedCoin?.label) {
+            const sendToAPi = await CommonHelper.formatBuyProductData(this.state.selectedProduct, this.state.selectedCoin);
+            this.setState({ buttonSiubmit: { label: 'Please wait...', isDisable: 'true' } });
+            CommonApiRequest.customerBuyProduct(sendToAPi).then((response) => {
+                this.setState({ buttonSiubmit: { label: 'Confirm', isDisable: 'false' } });
+                if (response?.success) {
+                    alert("Thank you for order");
+                    this.setState({ buyModal: false });
+                }
+            });
         } else {
             alert("Please select Asset");
         }
     }
     callBackCardComponent(data: any) {
-        this.setState({ buyModal: true,selectedProduct:data });
+        this.setState({ buyModal: true, selectedProduct: data });
     }
     onSelectCoin(data: any) {
-        this.setState({selectedCoin:data});
+        this.setState({ selectedCoin: data });
     }
     render() {
         return (
-            <MainLayout loaderVisible={this.state.loader} scrollEnable={true}>
-                <View style={{ justifyContent: 'center', marginBottom: 20, alignItems: 'center', width: '100%', borderRadius: 12, borderTopLeftRadius: 30, borderTopRightRadius: 30 }}>
+            <MainLayout loaderVisible={this.state.loader} scrollEnable={true} type="light">
+                <View style={{ justifyContent: 'center', marginBottom: 20, alignItems: 'center', width: '100%', borderRadius: 12, borderTopLeftRadius: 30, borderTopRightRadius: 30, paddingLeft: 10, paddingRight: 10 }}>
                     <View style={{ backgroundColor: Colors.ligtest_gray, flexDirection: 'row', width: '100%', borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                         {this.state?.allCategory && this.state?.allCategory?.map((cat, index) => {
                             return (
@@ -129,6 +130,22 @@ class ProductSscreen extends Component<{}> {
                                 </Pressable>
                             )
                         })}
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={[ThemeStyling.formgroup, {width:'30%', marginRight:35 }]}>
+                            <Dropdown onSelect={(data: any) => { this.selectPlacement(data) }} value={{ label: 'Lowest Price', value: 'Lowest Price' }} label={'Select Value'} containerstyle={{ borderRadius: 100 }} style={{ borderRadius: 100, borderColor: Colors.Gray, borderWidth:1}} dropDownItemStyle={{ borderRadius: 10, left: '5%' }} data={[{ label: 'Left', value: 'Left' }, { label: 'Right', value: 'Right' }]}></Dropdown>
+                        </View>
+                        <View style={{width:'30%', marginRight:15, backgroundColor: Colors.ligtest_gray, borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ width: (100 / 2) + '%', backgroundColor: "#004aad", padding: 10, borderRadius: 30, flexDirection: "row", alignItems: 'center', justifyContent: "center" }}>
+                                <Text style={{ color: Colors.white }}>Buy</Text>
+                            </View>
+                            <View style={{ width: (100 / 2) + '%', padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Text>Rent</Text>
+                            </View>
+                        </View>
+                        <View style={{width:'20%'}}>
+                            <Text>Filter (0)</Text>
+                        </View>
                     </View>
                 </View>
                 <View style={{ height: '100%', flex: 1 }}>
@@ -164,7 +181,7 @@ class ProductSscreen extends Component<{}> {
                                 <View style={{ marginTop: 25, width: '100%' }}>
                                     <View>
                                         <View style={{ width: '100%', alignItems: 'center', display: 'flex', justifyContent: 'space-between', flexDirection: 'row', backgroundColor: Colors.Gray, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingTop: 5, paddingBottom: 5, paddingLeft: 10, paddingRight: 10, marginBottom: 5 }}>
-                                            <Text style={[Theming.card.cardTitle, { fontWeight: 600 }]}>{this.state.selectedProduct?.name}</Text>
+                                            <Text style={[Theming.card?.cardTitle, { fontWeight: 600 }]}>{CommonHelper.suStringTextthis.state.selectedProduct?.name}</Text>
                                             <Text style={Theming.card.cardTitle}>{this.state.selectedProduct?.attr?.speed + " km/h"}</Text>
                                         </View>
                                         <Pressable style={{ padding: 15 }}>
