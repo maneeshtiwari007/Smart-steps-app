@@ -26,12 +26,11 @@ const Theming = StyleSheet.create({
     MainHeaderLayoutContent: {
         flex: 1,
         flexDirection: "row",
-        flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-between',
-        alignContent: 'flex-end',
-        paddingLeft: 10,
-        paddingBottom: 5,
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingBottom: 20,
 
     },
     headerRightIconContainer: {
@@ -154,6 +153,9 @@ const Theming = StyleSheet.create({
     card: {
         minHeight: 250,
         borderRadius: 18,
+        borderColor:Colors.primary_color,
+        borderWidth: 1,
+        borderStyle: 'solid',
         backgroundColor: Colors.ligtest_gray,
         width: '48%',
         marginBottom: '4%',

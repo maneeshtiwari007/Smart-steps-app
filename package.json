@@ -49,7 +49,8 @@
     "react-native-webview": "11.26.0",
     "react-redux": "^8.0.7",
     "redux": "^4.2.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "expo-linear-gradient": "~12.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
