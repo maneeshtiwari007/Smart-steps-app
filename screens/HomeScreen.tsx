@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { ThemeStyling } from "../utilty/styling/Styles";
+import { ProgressBar } from "react-native-paper";
+import { Feather, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+
 import {
   DeviceEventEmitter,
   Image,
@@ -20,6 +24,7 @@ import { connect } from "react-redux";
 import store from "../store";
 import { home_data } from "../store/action";
 import ImageComponent from "../components/Common/ImageComponent";
+import { HomeStyle } from "../utilty/styling/HomeStyle";
 
 interface StateInterface {
   pastStepCount: number;
@@ -193,7 +198,7 @@ class HomeSscreen extends Component<{}> {
   render() {
     return (
       <MainLayout style={{}} extraHeaderStyle={{}} scrollEnable={true} loaderVisible={this.state?.loader}>
-        {this.state?.productData?.[0] &&
+        {/* {this.state?.productData?.[0] &&
           <View style={{ width: '100%', minHeight: 350, justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ width: '90%', borderColor: Colors.white, borderWidth: 1, borderRadius: 20, height: 350 }}>
               <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', height: '100%', }}>
@@ -261,7 +266,80 @@ class HomeSscreen extends Component<{}> {
               </Pressable>
             </View>
           )}
-        </View>
+        </View> */}
+        <ImageBackground source={require('../assets/staticimages/bg-home.jpg')} style={HomeStyle.bgHome}>
+          <View style={[ThemeStyling.container, {paddingBottom:0}]}>
+            {/*ProgressBar group*/}
+            <View style={HomeStyle.progressBarGroup}>
+              <View style={HomeStyle.progressBarCol}>
+                <View style={HomeStyle.progressBarLabel}>
+                  <Image style={HomeStyle.imageIcon} source={require('../assets/staticimages/shoe-white.png')}></Image>
+                  <Text style={HomeStyle.progressBarText}>0.00/0.00</Text>
+                </View>
+                <ProgressBar style={HomeStyle.progressBar} progress={0.5} color="#004aad" />
+              </View>
+              <View style={HomeStyle.progressBarCol}>
+                <View style={HomeStyle.progressBarLabel}>
+                  <Image style={HomeStyle.imageIcon} source={require('../assets/staticimages/shoe-white.png')}></Image>
+                  <Text style={HomeStyle.progressBarText}>0.00/0.00</Text>
+                </View>
+                <ProgressBar style={HomeStyle.progressBar} progress={0} color="#004aad" />
+              </View>
+            </View>
+            {/*ProgressBar group*/}
+            {/*Pedometer Row*/}
+            <View style={HomeStyle.pedometerRow}>
+              <View style={[HomeStyle.pedometerCol, { width: '30%' }]}>
+                <Text style={HomeStyle.pedometerText}>00:14</Text>
+                <Feather style={HomeStyle.fontIcon} name="clock" size={24} color="black" />
+              </View>
+              <View style={[HomeStyle.pedometerCol, { width: '40%' }]}>
+
+                <View style={HomeStyle.pedometerContent}>
+                  <Text style={HomeStyle.totalSpeed}>0.0 km/h</Text>
+                  <Image style={HomeStyle.ImagePedometer} source={require('../assets/staticimages/pedometer.png')}></Image>
+                  <Text style={HomeStyle.pedometerSpeed}>1.0-20.0 km/h</Text>
+                </View>
+
+                <View style={HomeStyle.pedometerContent}>
+                  <Text style={HomeStyle.totaldistance}>0.00</Text>
+                  <Text style={HomeStyle.textUnit}>Kilometers</Text>
+                </View>
+
+                <View style={HomeStyle.pedometerContent}>
+                  <View style={HomeStyle.walkingHourswrap}>
+                    <Image style={HomeStyle.imageIcon2} source={require('../assets/staticimages/shoe-white.png')}></Image>
+                    <Text style={HomeStyle.walkingHours}>+0.00</Text>
+                  </View>
+                </View>
+
+              </View>
+              <View style={[HomeStyle.pedometerCol, { width: '30%', marginBottom: 0 }]}>
+                <Text style={HomeStyle.pedometerText}>0</Text>
+                <MaterialCommunityIcons style={HomeStyle.fontIcon} name="shoe-print" size={24} color="black" />
+              </View>
+            </View>
+            {/*Pedometer Row*/}
+          </View>
+          <ImageBackground source={require('../assets/staticimages/bg-pattern.jpg')} style={HomeStyle.bgPattern}>
+
+            <View style={ThemeStyling.container}>
+              {/*Background Pattern*/}
+              <View style={HomeStyle.threeColLayout}>
+                <View style={HomeStyle.col3}>
+                <Image style={HomeStyle.imageIcon3} source={require('../assets/staticimages/map-location.png')}></Image>
+                </View>
+                <View style={HomeStyle.col3}>
+                <Feather style={HomeStyle.fontIcon2} name="pause-circle" size={24} color="black" />
+                </View>
+                <View style={HomeStyle.col3}>
+                  <Image style={[HomeStyle.imageIcon3, {width: 80, height: 80}]} source={require('../assets/staticimages/shoe-black.png')}></Image>
+                </View>
+              </View>
+              {/*Background Pattern*/}
+            </View>
+          </ImageBackground>
+        </ImageBackground>
       </MainLayout>
     );
   }
