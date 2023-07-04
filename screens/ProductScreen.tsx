@@ -1,12 +1,12 @@
 import { Component, Key } from "react";
 import MainLayout from "../Layout/Index";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View, Image } from "react-native";
 import { SegmentedControl } from '@react-native-segmented-control/segmented-control';
 import Colors from "../utilty/Colors";
 import { CommonApiRequest } from "../utilty/api/commonApiRequest";
 import Theming from "../utilty/styling/theming";
 import ImageComponent from "../components/Common/ImageComponent";
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons, AntDesign } from '@expo/vector-icons';
 import ButtonComponent from "../components/Common/ButtonComponent";
 import CardComponent from "../components/Common/CardComponent";
 import Dropdown from "../components/Common/DropDown";
@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { CommonHelper } from "../utilty/CommonHelper";
 import { ThemeStyling } from "../utilty/styling/Styles";
-
+import { LinearGradient } from "expo-linear-gradient";
 class ProductSscreen extends Component<{}> {
     state = {
         selectedIndex: '',
@@ -116,38 +116,72 @@ class ProductSscreen extends Component<{}> {
     render() {
         return (
             <MainLayout loaderVisible={this.state.loader} scrollEnable={true} type="light">
-                <View style={{ justifyContent: 'center', marginBottom: 20, alignItems: 'center', width: '100%', borderRadius: 12, borderTopLeftRadius: 30, borderTopRightRadius: 30, paddingLeft: 10, paddingRight: 10 }}>
-                    <View style={{ backgroundColor: Colors.ligtest_gray, flexDirection: 'row', width: '100%', borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                        {this.state?.allCategory && this.state?.allCategory?.map((cat, index) => {
-                            return (
-                                <Pressable
-                                    onPress={() => {
-                                        this.handleSelectIndex(cat?.label);
-                                    }}
-                                    key={index}
-                                    style={{ borderWidth: (this.state.selectedIndex === cat?.label) ? 1 : 0, width: (100 / 3) + '%', padding: 10, borderRadius: 30, alignItems: 'center' }}>
-                                    <Text>{cat?.label}</Text>
-                                </Pressable>
-                            )
-                        })}
+                <LinearGradient
+                    // Background Linear Gradient
+                    colors={['#1aa5c6', '#0455ad']}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 0 }} style={{ padding: 20 , marginBottom: 30}}>
+                    <View style={{ justifyContent: 'center', marginBottom: 15, alignItems: 'center', width: '100%', backgroundColor: '#e2e2e2', borderRadius: 12, borderTopLeftRadius: 30, borderTopRightRadius: 30}}>
+                        <View style={{ backgroundColor: Colors.ligtest_gray, flexDirection: 'row', flex: 1, borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                            {this.state?.allCategory && this.state?.allCategory?.map((cat, index) => {
+                                return (
+                                    <Pressable
+                                        onPress={() => {
+                                            this.handleSelectIndex(cat?.label);
+                                        }}
+                                        key={index}
+                                        style={{ backgroundColor: (this.state.selectedIndex === cat?.label) ? '#004aad' : 'transparent', borderWidth: (this.state.selectedIndex === cat?.label) ? 1 : 0, width: (100 / 3) + '%', padding: 10, borderRadius: 30, alignItems: 'center' }}>
+                                        <Text style={{ color: (this.state.selectedIndex === cat?.label) ? '#fff' : '#000' }}>{cat?.label}</Text>
+                                    </Pressable>
+                                )
+                            })}
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <View style={{ width: '40%', marginRight: '10%' }}>
+                                <Dropdown containerstyle={{ backgroundColor: 'transparent' }} onSelect={(data: any) => { this.selectPlacement(data) }} value={{ label: 'Lowest Price', value: 'Lowest Price' }} label={'Select Value'} style={{ borderRadius: 50, borderColor: Colors.Gray, borderWidth: 1, height: 30, backgroundColor: '#fff', fontSize: 5, paddingLeft: 0, paddingRight: 10 }} dropDownItemStyle={{ borderRadius: 10, left: '5%' }} data={[{ label: 'Left', value: 'Left' }, { label: 'Right', value: 'Right' }]}></Dropdown>
+                            </View>
+                            <View style={{ width: '40%', backgroundColor: Colors.ligtest_gray, borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <View style={{ width: (100 / 2) + '%', backgroundColor: "#004aad", padding: 6, paddingLeft: 10, paddingRight: 10, borderRadius: 30, flexDirection: "row", alignItems: 'center', justifyContent: "center" }}>
+                                    <Text style={{ color: Colors.white, fontSize: Colors.FontSize.f12 }}>Buy</Text>
+                                </View>
+                                <View style={{ width: (100 / 2) + '%', padding: 6, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: Colors.FontSize.f12 }}>Rent</Text>
+                                </View>
+                            </View>
+                            {/* <View style={{ width: '22%' }}>
+                            <Text style={{ fontSize: Colors.FontSize.f12 }}>Filter (0)</Text>
+                            <AntDesign name="filter" size={24} color="black" />
+                        </View> */}
+                        </View>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <View style={[ThemeStyling.formgroup, {width:'30%', marginRight:35 }]}>
-                            <Dropdown onSelect={(data: any) => { this.selectPlacement(data) }} value={{ label: 'Lowest Price', value: 'Lowest Price' }} label={'Select Value'} containerstyle={{ borderRadius: 100 }} style={{ borderRadius: 100, borderColor: Colors.Gray, borderWidth:1}} dropDownItemStyle={{ borderRadius: 10, left: '5%' }} data={[{ label: 'Left', value: 'Left' }, { label: 'Right', value: 'Right' }]}></Dropdown>
+                        <View style={{ flexDirection: 'row', width: 25, height: 30, alignItems: 'center', justifyContent: 'center' }}>
+                            <Image source={require('../assets/staticimages/circleStar.png')} style={{ width: '100%', height: 25, borderRadius: 100, }}></Image>
+                            <Text style={{
+                                marginLeft: 5,
+                                fontSize: Colors.FontSize.f14,
+                                fontFamily: 'Inter_600SemiBold',
+                                fontWeight: '600',
+                                color: Colors.white,
+                            }}>0</Text>
                         </View>
-                        <View style={{width:'30%', marginRight:15, backgroundColor: Colors.ligtest_gray, borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <View style={{ width: (100 / 2) + '%', backgroundColor: "#004aad", padding: 10, borderRadius: 30, flexDirection: "row", alignItems: 'center', justifyContent: "center" }}>
-                                <Text style={{ color: Colors.white }}>Buy</Text>
-                            </View>
-                            <View style={{ width: (100 / 2) + '%', padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text>Rent</Text>
-                            </View>
-                        </View>
-                        <View style={{width:'20%'}}>
-                            <Text>Filter (0)</Text>
+                        <View>
+                            <TouchableOpacity style={{}} onPress={() => { alert("Spark") }}>
+                                <Text style={{
+                                    fontSize: Colors.FontSize.f12,
+                                    fontFamily: 'Inter_500Medium',
+                                    fontWeight: '600',
+                                    color: Colors.primary_color,
+                                    backgroundColor: '#ffcc00',
+                                    padding: 5,
+                                    paddingLeft: 20,
+                                    paddingRight: 20,
+                                    borderRadius: 30,
+                                }}>+ Spark</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </View>
+                </LinearGradient>
                 <View style={{ height: '100%', flex: 1 }}>
                     <View style={Theming.cardContainer}>
                         {this.state.productData?.[0] && this.state?.productData?.map((item: any, index: Key) => {
@@ -238,7 +272,7 @@ const styles = StyleSheet.create({
     text: {
         color: '#3f2949',
         marginTop: 10,
-    }
+    },
 });
 const mapStateToState = state => ({
     user: state.errors,
