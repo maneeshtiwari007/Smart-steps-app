@@ -197,7 +197,10 @@ class HomeSscreen extends Component<{}> {
   }
   render() {
     return (
-      <MainLayout style={{}} extraHeaderStyle={{}} scrollEnable={true} loaderVisible={this.state?.loader}>
+      <MainLayout style={{
+        flex: 1,
+        flexDirection: 'column',
+      }} extraHeaderStyle={{}} scrollEnable={true} loaderVisible={this.state?.loader}>
         {/* {this.state?.productData?.[0] &&
           <View style={{ width: '100%', minHeight: 350, justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ width: '90%', borderColor: Colors.white, borderWidth: 1, borderRadius: 20, height: 350 }}>
@@ -267,8 +270,8 @@ class HomeSscreen extends Component<{}> {
             </View>
           )}
         </View> */}
-        <ImageBackground source={require('../assets/staticimages/bg-home.jpg')} style={HomeStyle.bgHome}>
-          <View style={[ThemeStyling.container, {paddingBottom:0}]}>
+        <ImageBackground source={require('../assets/staticimages/bg-home-old.jpg')} style={HomeStyle.bgHome}>
+          <View style={[ThemeStyling.container, { paddingBottom: 0 }]}>
             {/*ProgressBar group*/}
             <View style={HomeStyle.progressBarGroup}>
               <View style={HomeStyle.progressBarCol}>
@@ -321,24 +324,23 @@ class HomeSscreen extends Component<{}> {
             </View>
             {/*Pedometer Row*/}
           </View>
-          <ImageBackground source={require('../assets/staticimages/bg-pattern.jpg')} style={HomeStyle.bgPattern}>
-
-            <View style={ThemeStyling.container}>
-              {/*Background Pattern*/}
-              <View style={HomeStyle.threeColLayout}>
-                <View style={HomeStyle.col3}>
+        </ImageBackground>
+        <ImageBackground source={require('../assets/staticimages/bg-pattern.jpg')} style={HomeStyle.bgPattern}>
+          <View style={ThemeStyling.container}>
+            {/*Background Pattern*/}
+            <View style={HomeStyle.threeColLayout}>
+              <View style={HomeStyle.col3}>
                 <Image style={HomeStyle.imageIcon3} source={require('../assets/staticimages/map-location.png')}></Image>
-                </View>
-                <View style={HomeStyle.col3}>
-                <Feather style={HomeStyle.fontIcon2} name="pause-circle" size={24} color="black" />
-                </View>
-                <View style={HomeStyle.col3}>
-                  <Image style={[HomeStyle.imageIcon3, {width: 80, height: 80}]} source={require('../assets/staticimages/shoe-black.png')}></Image>
-                </View>
               </View>
-              {/*Background Pattern*/}
+              <View style={HomeStyle.col3}>
+                <Feather style={HomeStyle.fontIcon2} name="pause-circle" size={24} color="black" />
+              </View>
+              <View style={HomeStyle.col3}>
+                <Image style={[HomeStyle.imageIcon3, { width: 80, height: 80 }]} source={require('../assets/staticimages/shoe-black.png')}></Image>
+              </View>
             </View>
-          </ImageBackground>
+            {/*Background Pattern*/}
+          </View>
         </ImageBackground>
       </MainLayout>
     );

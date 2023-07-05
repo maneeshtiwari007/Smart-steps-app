@@ -4,8 +4,9 @@ import { convertArea } from "geolib";
 
 export const HomeStyle = StyleSheet.create({
     bgHome: {
+        flex: 1,
+        resizeMode: 'cover',
         justifyContent: 'center',
-        flex:1,
     },
     progressBarGroup: {
         flexDirection: 'row',
@@ -105,11 +106,13 @@ export const HomeStyle = StyleSheet.create({
     bgPattern: {
         flex: 1,
         justifyContent: 'center',
+        paddingTop: 20,
+        paddingBottom: 20,
     },
     threeColLayout:{
         flexDirection: "row",
         justifyContent: 'space-between',
-        paddingBottom: 70,
+        paddingBottom: 0,
         alignItems: "center",
     },
     col3:{

@@ -27,6 +27,7 @@ const Colors = {
     warning_light:"#1aa179",
     lightest_crystal_blue:'#d0f7ff',
     lightest_primary_color:"#888888",
-    gray_light:'#e6e6e6'
+    gray_light:'#e6e6e6',
+    blue: '#004aad',
 }
 export default Colors;

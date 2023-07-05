@@ -27,6 +27,7 @@ import {
   Inter_900Black,
 } from '@expo-google-fonts/inter';
 import AppLoading from 'expo-app-loading';
+import { useTheme } from "react-native-paper";
 
 export default function App() {
   const [backGroundColor, setBackGroundColor] = useState(Colors.homeHeadColor);
@@ -37,6 +38,8 @@ export default function App() {
   const [pastStepCount, setPastStepCount] = useState(0);
   const [currentStepCount, setCurrentStepCount] = useState(0);
   const Stack = createStackNavigator();
+  const theme = useTheme();
+  theme.colors.secondaryContainer = "transperent"
   const animatedHeaderBackground = AnimateHeaderValue.interpolate;
   ({
     inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],

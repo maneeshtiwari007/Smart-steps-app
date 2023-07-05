@@ -12,7 +12,7 @@ import {
   MaterialCommunityIcons,
   FontAwesome5
 } from "@expo/vector-icons";
-import { NativeEventEmitter, StyleSheet, NativeModules } from "react-native";
+import { NativeEventEmitter, StyleSheet, NativeModules, Image } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import HomeSscreen from "../../screens/HomeScreen";
@@ -27,6 +27,7 @@ import DetailScreen from "../../screens/Product/DetailScreen";
 import UserWalletScreen from "../../screens/Wallet/UserWalletScreen";
 import StaticSCreen from "../../screens/StaticScreen";
 import CustomerProductScreen from "../../screens/Product/CustomerProductScreen";
+import { transparent } from "react-native-paper/lib/typescript/src/styles/themes/v2/colors";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -76,16 +77,19 @@ export default class AppContainer extends Component<{}> {
         <Tab.Navigator
           initialRouteName="Home"
           activeColor={Colors.light_crystal_blue}
-          inactiveColor={Colors.white}
-          barStyle={{ backgroundColor: Colors.primary_color }}
+          inactiveColor={Colors.primary_color}
+          barStyle={{ height:85,backgroundColor: '#fff'}}
+          labeled={false}
         >
           <Tab.Screen
             name="Home"
             component={HomeSscreen}
+
             options={{
-              tabBarLabel: "Sports",
-              tabBarIcon: ({ color }) => (
-                <FontAwesome5 name="running" size={26} color={color} />
+              tabBarLabel: "",
+              tabBarIcon: ({ focused,color }) => (
+                //<FontAwesome5 name="running" size={26} color={color} />
+                <Image source={(focused)?require('../../assets/staticimages/running-man-blue.png'):require('../../assets/staticimages/running-man-black.png')} style={{ height:40,width:40 }}/>
               ),
             }}
           />
@@ -93,9 +97,10 @@ export default class AppContainer extends Component<{}> {
             name="NFT"
             component={CustomerProductScreen}
             options={{
-              tabBarLabel: "NFT",
+              tabBarLabel: "",
               tabBarIcon: ({ focused,color }) => (
-                <MaterialCommunityIcons name="shoe-sneaker" size={26} color={color} />
+                // <MaterialCommunityIcons name="shoe-sneaker" size={26} color={color} />
+                <Image source={(focused)?require('../../assets/staticimages/shoe-blue.png'):require('../../assets/staticimages/shoe-black.png')} style={{ height:40,width:40 }}/>
               ),
               tabBarAccessibilityLabel:"NFT"
             }}
@@ -104,9 +109,10 @@ export default class AppContainer extends Component<{}> {
             name="Notification"
             component={StaticSCreen}
             options={{
-              tabBarLabel: "Statistics",
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="bell-outline" color={color} size={26} />
+              tabBarLabel: "",
+              tabBarIcon: ({ focused,color }) => (
+                //<MaterialCommunityIcons name="bell-outline" color={color} size={26} />
+                <Image source={(focused)?require('../../assets/staticimages/user-star-blue.png'):require('../../assets/staticimages/user-star-black.png')} style={{ height:40,width:40 }}/>
               ),
             }}
           />
@@ -114,9 +120,10 @@ export default class AppContainer extends Component<{}> {
             name="Products"
             component={ProductSscreen}
             options={{
-              tabBarLabel: "Product",
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="cart-outline" size={26} color={color} />
+              tabBarLabel: "",
+              tabBarIcon: ({ focused,color }) => (
+                //<MaterialCommunityIcons name="cart-outline" size={26} color={color} />
+                <Image source={(focused)?require('../../assets/staticimages/cart-moving-blue.png'):require('../../assets/staticimages/cart-moving-black.png')} style={{ height:40,width:40 }}/>
               ),
             }}
           />
