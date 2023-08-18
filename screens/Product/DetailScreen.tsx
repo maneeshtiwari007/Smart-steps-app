@@ -17,13 +17,12 @@ export default class DetailScreen extends Component<{}> {
         super(props);
     }
     componentDidMount() {
-        //console.log(this.props?.navigation)
     }
     render() {
         const item = this.props?.route?.params?.item;
         return (
             <>
-                <MainLayout style={{ backgroundColor: Colors.ligtest_gray }} extraHeaderStyle={{}} isBack={true}>
+                <MainLayout  style={{ backgroundColor: Colors.ligtest_gray }} extraHeaderStyle={{}} isBack={true}>
                     <View style={{ width: '100%', height: 250 }}>
                         <View style={{ padding: 0, alignItems: 'center' }}>
                             <View style={{ width: '70%', height: '100%', justifyContent: 'center' }}>

@@ -30,7 +30,6 @@ const Dropdown: FC<Props> = ({ label, data, onSelect, style = {}, containerstyle
   };
 
   const openDropdown = (): void => {
-    console.log(label);
     DropdownButton.current.measure((_fx: number, _fy: number, _w: number, h: number, _px: number, py: number) => {
       setDropdownTop(py + h);
     });

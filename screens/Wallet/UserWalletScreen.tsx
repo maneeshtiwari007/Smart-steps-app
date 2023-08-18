@@ -1,7 +1,7 @@
 import { Component, ReactNode } from "react"
 import MainLayout from "../../Layout/Index";
 import Colors from "../../utilty/Colors";
-import { Button, Image, Modal, StyleSheet, Text, View } from "react-native";
+import { Button, DeviceEventEmitter, Image, Modal, StyleSheet, Text, View } from "react-native";
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons, Feather, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import Dropdown from "../../components/Common/DropDown";
@@ -18,9 +18,15 @@ import * as Clipboard from 'expo-clipboard';
 import TransferComponent from "../../components/Common/TransferComponent";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import InputComponent from "../../components/Common/InputComponent";
+import WebView from "react-native-webview";
+import { Dimensions } from "react-native";
+import Constants from 'expo-constants';
+import { CommonHelper } from "../../utilty/CommonHelper";
+import { Constant } from "../../utilty/Constant";
+import ServerErrorMessage from "../../components/Common/ServerErrorMessage";
 
 export default class UserWalletScreen extends Component<{}> {
-
+    walletView:any=null;
     constructor(props) {
         super(props);
         this.state = {
@@ -28,7 +34,7 @@ export default class UserWalletScreen extends Component<{}> {
             showModal: false,
             passModal: false,
             disableNumPad: false,
-            loader: false,
+            loader: true,
             success: false,
             type: 'create',
             userWalletData: {},
@@ -37,11 +43,18 @@ export default class UserWalletScreen extends Component<{}> {
             transferTypeTo: '',
             authPassword: '1',
             showTransferModalExternal: false,
-            amount:'',
-            address:'',
-            obbjCoinData:{},
-            selectedCoin:{},
-            buttonSiubmit:{label:'Confirm',isDisable:'false' }
+            amount: '',
+            address: '',
+            obbjCoinData: {},
+            selectedCoin: {},
+            buttonSiubmit: { label: 'Confirm', isDisable: 'false' },
+            spendingData: {},
+            url: '',
+            token: null,
+            webViewStateData:{},
+            isWebViewBackEnable:false,
+            confirmPass:false,
+            httpError:false
         }
     }
     setShowModal(data: any) {
@@ -65,23 +78,34 @@ export default class UserWalletScreen extends Component<{}> {
         this.setState({ selectedIndex: index });
     }
     componentDidMount() {
-        console.log('Paa Model')
-        this.setState({ loader: false })
-        CommonApiRequest.checkWalletExists({}).then((response) => {
-            this.setState({ loader: false })
-            if (response?.data === false) {
-                this.setState({ passModal: true, type: 'create' })
-            } else {
-                this.setState({ passModal: true, type: 'log' })
+        this.setState({ loader: true })
+        this.props.navigation.addListener('focus', () => {
+            if(this.state?.httpError){
+                setTimeout(() => {
+                    this.checkWalletAPi();
+                }, 500)
             }
-        }).catch(() => {
-            this.setState({ loader: false })
+            this.checkWalletAPi()
         });
+        this.checkWalletAPi()
         //this.setState({ passModal: true });
         // CommonApiRequest.walletView({ authPassword: this.state.authPassword }).then((response) => {
         //     //console.log(response?.data);
         //     this.setState({ userWalletData: response?.data });
         // }).catch((error) => { console.log('error') })
+    }
+    checkWalletAPi(){
+        this.setState({ loader: true })
+        CommonApiRequest.checkWalletExists({}).then((response) => {
+            this.setState({ loader: false });
+            if (response?.data === false) {
+                this.setState({ passModal: true, type: 'create' })
+            } else {
+                this.setState({ passModal: true, type: 'log' }) //log
+            }
+        }).catch(() => {
+            this.setState({ loader: false });
+        });
     }
     onPressPassworddNum(data) {
         if (data?.length === 6) {
@@ -92,33 +116,87 @@ export default class UserWalletScreen extends Component<{}> {
     }
     callBackPassword(data: any) {
         const joinedData = data?.join("");
+        this.setState({ authPassword: joinedData })
         if (this.state.type === "create") {
-            this.setState({ authPassword: joinedData })
-            CommonApiRequest.walletCreate({ authPassword: joinedData }).then((response) => {
-                this.setState({ loader: false })
-            }).catch(() => {
-                this.setState({ loader: false })
-            });
+            this.setState({ authPassword: joinedData });
+            this.setState({ confirmPass: true });
+            
+            // CommonApiRequest.walletCreate({ authPassword: joinedData }).then((response) => {
+            //     this.setState({ loader: false })
+            //     this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, this.state?.token) });
+            // }).catch(() => {
+            //     this.setState({ loader: false });
+            //     this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, this.state?.token) });
+            // });
         } else {
-            CommonApiRequest.walletView({ authPassword: joinedData }).then((response) => {
+            CommonApiRequest.customerGet({}).then((response) => {
                 if (response?.success) {
+                    this.setState({ spendingData: response?.data });
+                }
+            })
+            // CommonApiRequest.walletView({ authPassword: joinedData }).then((response) => {
+            //     if (response?.success) {
+            //         CommonHelper.getData('user').then((user) => {
+            //             if (user?.token) {
+            //                 this.setState({ token: user?.token });
+            //                 this.setState({ loader: false })
+            //                 //this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, this.state?.token) });
+            //             }
+            //         })
+            //         this.setState({ passModal: false, type: 'log' })
+            //         this.setState({ authPassword: joinedData });
+            //         this.setState({ userWalletData: response?.data });
+            //         if (response?.data?.wallets?.[0]) {
+            //             var objCnData = [];
+            //             response?.data?.wallets?.[0]?.coins?.map((item) => {
+            //                 objCnData?.push({ label: item?.coin, value: item?.coin, amount: item?.amount?.toString() });
+            //                 this.setState({ obbjCoinData: objCnData });
+            //             })
+            //         }
+            //     }
+            // }).catch((error) => {
+            //     this.setState({ passModal: true, type: 'log' })
+            // });
+            CommonApiRequest.walletValidate({ authPassword: joinedData }).then((response) => {
+                if (response?.success) {
+                    CommonHelper.getData('user').then((user) => {
+                        if (user?.token) {
+                            this.setState({ token: user?.token });
+                            this.setState({ loader: false });
+                            this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, user?.token) });
+                        }
+                    })
                     this.setState({ passModal: false, type: 'log' })
                     this.setState({ authPassword: joinedData });
-                    this.setState({ userWalletData: response?.data });
-                    if(response?.data?.wallets?.[0]){
-                        var objCnData = [];
-                        response?.data?.wallets?.[0]?.coins?.map((item) => {
-                            objCnData?.push({ label: item?.coin, value: item?.coin, amount: item?.amount?.toString() });
-                            this.setState({ obbjCoinData: objCnData });
-                        })
-                    }
+                } else {
+                    this.setState({ passModal: true, type: 'log' })
                 }
-            }).catch((error) => {
-                console.log(error);
+            }).catch(()=>{
                 this.setState({ passModal: true, type: 'log' })
             })
         }
 
+    }
+    callBackOnConfirm(data:any){
+        const joinedData = data?.join("");
+        if(joinedData === this.state?.authPassword){
+            CommonHelper.getData('user').then((user) => {
+                if (user?.token) {
+                    this.setState({ token: user?.token });
+                    this.setState({ loader: false });
+                    this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, this.state?.token) });
+                }
+            })
+            // CommonApiRequest.walletCreate({ authPassword: this.state?.authPassword }).then((response) => {
+            //     this.setState({ loader: false });
+            //     this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, this.state?.token) });
+            // }).catch(() => {
+            //     this.setState({ loader: false });
+            //     this.setState({ url: CommonHelper.returnWebViewWallet(joinedData, this.state?.token) });
+            // });
+        } else {
+            alert("Not Matched");
+        }
     }
     async copyToClipBord(text: any) {
         await Clipboard.setStringAsync(text);
@@ -127,12 +205,12 @@ export default class UserWalletScreen extends Component<{}> {
     _updateMasterState = (attrName, value) => {
         this.setState({ [attrName]: value });
     }
-    onSelectCoin(data:any){
+    onSelectCoin(data: any) {
         this.setState({ selectedCoin: data });
     }
-    initiateExytrenalTransfer(){
-        if(this.state?.selectedCoin?.label && this.state?.amount!==""  && this.state?.address!==""){
-            this.setState({buttonSiubmit:{label:"Please wait...",isDisable:'true'}})
+    initiateExytrenalTransfer() {
+        if (this.state?.selectedCoin?.label && this.state?.amount !== "" && this.state?.address !== "") {
+            this.setState({ buttonSiubmit: { label: "Please wait...", isDisable: 'true' } })
             const transferData = {
                 "fromGroup": 'Wallet',
                 "toGroup": 'Wallet',
@@ -142,76 +220,85 @@ export default class UserWalletScreen extends Component<{}> {
                 "authPassword": this.state?.authPassword,
                 "kind": "External"
             }
-            this.setState({loader:true})
-            CommonApiRequest.walletTraansfer(transferData).then((response)=>{
-                this.setState({loader:false})
-                if(response?.success){
+            this.setState({ loader: true })
+            CommonApiRequest.walletTraansfer(transferData).then((response) => {
+                this.setState({ loader: false })
+                if (response?.success) {
                     alert('Transfer successfully!');
                 }
-                this.setState({buttonSiubmit:{label:"Confirm",isDisable:'false'}})
-                this.setState({amount:''});
-                this.setState({address:''});
-            }).catch(()=>{
-                this.setState({loader:false})
-                this.setState({buttonSiubmit:{label:"Confirm",isDisable:'false'}})
+                this.setState({ buttonSiubmit: { label: "Confirm", isDisable: 'false' } })
+                this.setState({ amount: '' });
+                this.setState({ address: '' });
+            }).catch(() => {
+                this.setState({ loader: false })
+                this.setState({ buttonSiubmit: { label: "Confirm", isDisable: 'false' } })
             })
         } else {
             alert('All Fields are required')
         }
     }
-
+    onBackHistory(){
+        if(this.state.webViewStateData?.canGoBack){
+            this.setState({isWebViewBackEnable:true});
+            this?.walletView?.goBack();
+        } else {
+            this.setState({isWebViewBackEnable:false});
+            //this.props?.navigation?.goBack(-1);
+        }
+    }
     render() {
         return (
             <>
-                <MainLayout isBack={false} style={{ backgroundColor: Colors.ligtest_gray }} extraHeaderStyle={{ backgroundColor: Colors.primary_color }} loaderVisible={this.state?.loader}>
+                <MainLayout scrollEnable={false} isModal={true} isWebViewBackEnable={this.state?.isWebViewBackEnable} onBackCallback={()=>{this.onBackHistory()}} isHistory={true} isBack={false} style={{ backgroundColor: Colors.ligtest_gray }} extraHeaderStyle={{ backgroundColor: Colors.primary_color }} loaderVisible={this.state?.loader}>
                     {this.state.success &&
                         <SuccessMessage title="Successfully" subMessage="Your wallet created successfully!"></SuccessMessage>
                     }
-                    <View style={{ backgroundColor: Colors.primary_color }}>
-                        <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 20 }}>
-                            <View style={{ width: '7.5%', marginRight: '7%' }}>
-                                <Pressable onPress={() => { this.props?.navigation?.goBack() }} style={{ marginLeft: 10, borderWidth: 1, width: 30, height: 30, borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderColor: 'white' }}>
-                                    <Ionicons name="ios-arrow-back" size={24} color="white" />
-                                </Pressable>
-                            </View>
-                            <View style={{ width: '70%', marginRight: '3%' }}>
-                                <View style={{ backgroundColor: Colors.ligtest_gray, flexDirection: 'row', borderColor: Colors.Gray, borderWidth: 1, borderRadius: 30, justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Pressable
-                                        onPress={() => {
-                                            this.changeSegment(0)
-                                        }}
-                                        key={1}
-                                        style={{ borderWidth: (this.state.selectedIndex === 0) ? 1 : 0, padding: 10, borderRadius: 30, alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <MaterialCommunityIcons name="run-fast" size={18} color="black" style={{ marginRight: 10 }} />
-                                            <Text>Spending</Text>
-                                        </View>
-                                    </Pressable>
-                                    <Pressable
-                                        onPress={() => {
-                                            this.changeSegment(1)
-                                        }}
-                                        key={2}
-                                        style={{ borderWidth: (this.state.selectedIndex === 1) ? 1 : 0, padding: 10, borderRadius: 30, alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Feather name="globe" size={18} color="black" style={{ marginRight: 10 }} />
-                                            <Text>Wallet</Text>
-                                        </View>
-                                    </Pressable>
-                                </View>
-                            </View>
-                            <View style={{ width: '7.5%', marginRight: '4%' }}>
-                                <Pressable onPress={() => { this.props?.navigation?.goBack() }} style={{ marginLeft: 10, borderWidth: 1, width: 30, height: 30, borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderColor: 'white' }}>
-                                    <Ionicons name="settings" size={24} color="white" />
-                                </Pressable>
-                            </View>
-                        </View>
-                    </View>
-                    {this.state?.selectedIndex === 0 && this.state.userWalletData?.wallets &&
-                        <SpendingWallet objbData={this.state.userWalletData?.wallets?.[0]}></SpendingWallet>
+                    {this.state?.url !== "" && !this.state?.httpError &&
+                        <WebView
+                            ref={(viewData)=>{this.walletView=viewData}}
+                            originWhitelist={['*']}
+                            style={styles.WebViewcontainer}
+                            source={{ uri: this.state?.url }}
+                            bounces={false}
+                            onLoadStart={() => {
+                                this.setState({ loader: true })
+                            }}
+                            onLoadEnd={() => {
+                                this.setState({ loader: false })
+                            }}
+                            onLoad={() => {
+                                this.setState({ loader: false })
+                            }}
+                            onNavigationStateChange={(state:any)=>{
+                                if(state?.url?.includes("smartapp.coin.update")){
+                                    DeviceEventEmitter.emit(Constant.REFRESH_COINT_EVENT,{data:'data'});
+                                    this.setState({ url:null});
+                                    setTimeout(()=>{
+                                        this.setState({ url: CommonHelper.returnWebViewWallet(this.state?.authPassword, this.state?.token) });
+                                    },500)
+                                }
+                                this.setState({webViewStateData:state});
+                                if(state.url?.includes(Constant.check_wallet_url)){
+                                    this.setState({ isWebViewBackEnable: false });
+                                } else {
+                                    this.setState({ isWebViewBackEnable: true });
+                                }
+                                if(state?.url?.includes(Constant.check_for_logout_url)){
+                                    CommonHelper.removeData('user');
+                                    this.props.navigation.replace('Auth');
+                                }
+                            }}
+                            onError={()=>{
+                                this.setState({ loader: false });
+                                this.setState({url:null,httpError:true})
+                            }}
+                            onHttpError={()=>{
+                                this.setState({ loader: false });
+                            }}
+                        />
                     }
-                    {this.state?.selectedIndex === 1 &&
-                        <MainWallet onShowModal={(data: any) => { this.setShowModal(data) }} objbData={this.state.userWalletData?.wallets?.[0]}></MainWallet>
+                    {!this.state?.url && this.state?.httpError &&
+                        <ServerErrorMessage/>
                     }
 
                     {this.state.userWalletData?.wallets?.[0]?.addressQR &&
@@ -246,7 +333,10 @@ export default class UserWalletScreen extends Component<{}> {
                     }
                 </MainLayout>
                 {this.state?.passModal &&
-                    <SecuredWalletComponent dataCallBack={(data: any) => { this.callBackPassword(data) }} modelVisible={true} onPressNum={(data: any) => { this.onPressPassworddNum(data) }} disablePad={this.state.disableNumPad} onCloseModal={(data) => { this.setState({ passModal: false }); this.setState({ disableNumPad: false }) }}></SecuredWalletComponent>
+                    <SecuredWalletComponent isConfirmModal={false} title={(this.state?.type==='log')?"Enter password":"Create Password"}  dataCallBack={(data: any) => { this.callBackPassword(data) }} modelVisible={true} onPressNum={(data: any) => { this.onPressPassworddNum(data) }} disablePad={this.state.disableNumPad} onCloseModal={(data) => { this.setState({ passModal: false }); this.setState({ disableNumPad: false }) }}></SecuredWalletComponent>
+                }
+                {this.state?.confirmPass &&
+                    <SecuredWalletComponent isConfirmModal={true} confirmData={this?.state?.authPassword} title={"Confirm password"} dataCallBack={(data: any) => { this.callBackOnConfirm(data) }} modelVisible={true} onPressNum={(data: any) => { this.onPressPassworddNum(data) }} disablePad={this.state.disableNumPad} onCloseModal={(data) => { this.setState({ passModal: false }); this.setState({ disableNumPad: false }) }}></SecuredWalletComponent>
                 }
                 {this.state?.showTransferModal &&
                     <Modal
@@ -258,7 +348,7 @@ export default class UserWalletScreen extends Component<{}> {
                             <View style={{ marginTop: 65 }}>
                                 <View style={{ flexDirection: 'row', width: '100%', marginBottom: 20 }}>
                                     <View style={{}}>
-                                        <TouchableOpacity onPress={() => { this.setShowModal({ data: false, type: 'mn',transferType:'Spending' }); }} style={{ marginLeft: 10, borderWidth: 1, width: 30, height: 30, borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderColor: 'white' }}>
+                                        <TouchableOpacity onPress={() => { this.setShowModal({ data: false, type: 'mn', transferType: 'Spending' }); }} style={{ marginLeft: 10, borderWidth: 1, width: 30, height: 30, borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderColor: 'white' }}>
                                             <Ionicons name="ios-arrow-back" size={24} color="white" />
                                         </TouchableOpacity>
                                     </View>
@@ -297,10 +387,10 @@ export default class UserWalletScreen extends Component<{}> {
                             <View style={styles.modal}>
                                 <View style={{ marginTop: 25, width: '100%' }}>
                                     <View>
-                                    <View style={{ marginBottom: 20 }}>
-                                        <Text style={[Theming.pTagWhite]}>Select Coin</Text>
-                                        <Dropdown dropDownItemStyle={{ width: '93.1%', left: '2.9%' }} label="Select Asset" containerstyle={{ width: '100%', height: 60, paddingLeft: 0, paddinRight: 10, borderRadius: 10, backgroundColor: Colors.white }} style={{ width: '100%', margingLeft: 'auto', marginRight: 'auto', height: 60, borderRadius: 10, backgroundColor: Colors.lightest_crystal_blue }} data={this.state?.obbjCoinData} onSelect={(data: any) => { this.onSelectCoin(data)}}></Dropdown>
-                                    </View>
+                                        <View style={{ marginBottom: 20 }}>
+                                            <Text style={[Theming.pTagWhite]}>Select Coin</Text>
+                                            <Dropdown dropDownItemStyle={{ width: '93.1%', left: '2.9%' }} label="Select Asset" containerstyle={{ width: '100%', height: 60, paddingLeft: 0, paddinRight: 10, borderRadius: 10, backgroundColor: Colors.white }} style={{ width: '100%', margingLeft: 'auto', marginRight: 'auto', height: 60, borderRadius: 10, backgroundColor: Colors.lightest_crystal_blue }} data={this.state?.obbjCoinData} onSelect={(data: any) => { this.onSelectCoin(data) }}></Dropdown>
+                                        </View>
                                         <View>
                                             <Text style={[Theming.pTagWhite]}>To Address</Text>
                                             <InputComponent
@@ -389,6 +479,10 @@ const styles = StyleSheet.create({
         minHeight: '100%',
         backgroundColor: Colors.white,
         width: '100%',
-
+    },
+    WebViewcontainer: {
+        height: Dimensions.get('window').height,
+        width: '100%',
+        paddingTop: 0,
     },
 });

@@ -1,6 +1,6 @@
 {
   "name": "smart-steps",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -19,17 +19,19 @@
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
     "deprecated-react-native-prop-types": "^2.3.0",
-    "expo": "~48.0.15",
+    "expo": "~48.0.18",
     "expo-app-loading": "^2.1.1",
     "expo-clipboard": "~4.1.2",
     "expo-constants": "~14.2.1",
     "expo-font": "~11.1.1",
+    "expo-linear-gradient": "^12.1.2",
     "expo-linking": "~4.0.1",
     "expo-location": "~15.1.1",
     "expo-router": "^1.5.3",
     "expo-sensors": "~12.1.1",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
+    "expo-system-ui": "^2.2.1",
     "geolib": "^3.3.4",
     "lottie-react-native": "^5.1.6",
     "metro": "^0.76.6",
@@ -50,7 +52,10 @@
     "react-redux": "^8.0.7",
     "redux": "^4.2.1",
     "uuid": "^9.0.0",
-    "expo-linear-gradient": "~12.1.2"
+    "expo-av": "~13.2.1",
+    "expo-device": "~5.2.1",
+    "expo-network": "~5.2.1",
+    "@react-native-community/netinfo": "9.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

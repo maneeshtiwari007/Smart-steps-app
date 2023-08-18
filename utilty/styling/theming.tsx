@@ -1,27 +1,27 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import Colors from "../Colors";
 
 const Theming = StyleSheet.create({
     LayoutContainer: {
         flex: 1,
-        backgroundColor: Colors.primary_color,
+        backgroundColor: Colors.backGroundColor,
         paddingTop: 0,
         marginBottom: 0
     },
     LayoutContainerLight: {
         flex: 1,
-        backgroundColor: Colors.gray_light,
+        backgroundColor: Colors.backGroundColor,
         paddingTop: 0,
         marginBottom: 0
     },
     LoginLayoutContainer: {
         flex: 1,
-        backgroundColor: Colors.primary_color,
+        backgroundColor: Colors.backGroundColor,
         paddingTop: 45,
     },
     MainHeaderLayoutContainer: {
         width: '100%',
-        height: 45,
+        height: 55
     },
     MainHeaderLayoutContent: {
         flex: 1,
@@ -36,7 +36,7 @@ const Theming = StyleSheet.create({
     headerRightIconContainer: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',     
+        justifyContent: 'space-between',    
     },
     iconStyle:{
         width: 38,
@@ -54,10 +54,9 @@ const Theming = StyleSheet.create({
         fontWeight: '600',
     },
     headerRightIcon: {
-        width: 38,
         height: 38,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     headerLeftUserIcon: {
         width: 38,
@@ -174,18 +173,16 @@ const Theming = StyleSheet.create({
         height: 15,
         borderWidth: 1,
         borderRadius: 50,
-        borderColor: Colors.white,
+        borderColor: Colors.purpule,
         marginLeft: 12,
         marginRight: 10
     },
     modal: {
         alignItems: 'center',
-        bottom: 0,
-        left: 0,
-        minHeight: '100%',
-        backgroundColor: Colors.primary_color,
+        backgroundColor: Colors.backGroundColor,
         width: '100%',
-        top: 0
+        height:Dimensions.get('window').height-100,
+        justifyContent:'center'
     },
     numPad: {
         marginBottom: 15,
@@ -193,7 +190,7 @@ const Theming = StyleSheet.create({
         height: 70,
         borderRadius: 50,
         borderWidth: 1,
-        borderColor: Colors.white,
+        borderColor: Colors.purpule,
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 10,
@@ -203,6 +200,40 @@ const Theming = StyleSheet.create({
         color: Colors.white,
         fontSize: Colors.FontSize.f12,
         marginBottom: 5
+    },
+    headerMiddileIcon: {
+        width: 58,
+        height: 32,
+        borderColor: Colors.white,
+        borderWidth: 1,
+        borderRadius: 18,
+        justifyContent: "center",
+        alignItems: "center",    
+        position: "relative",   
+        flexDirection: "row",
+        backgroundColor:Colors.secondColor
+    },
+    networkBody:{ 
+        flex:1,
+        backgroundColor:Colors.backGroundColor 
+    },
+    networkContainer:{ 
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    networkTitle:{
+        fontSize:Colors.FontSize.f17,
+        fontWeight:'bold',
+        color:'#000',
+        marginBottom:15
+    },
+    networkSubTitle:{
+        fontSize:Colors.FontSize.f14,
+        color:Colors.light_black,
+        width:'70%',
+        textAlign:'center'
+
     }
 
 });

@@ -6,7 +6,6 @@ import ButtonComponent from "./ButtonComponent";
 import Theming from "../../utilty/styling/theming";
 import Colors from "../../utilty/Colors";
 import { any, number, func,bool } from 'prop-types';
-import { CommonHelper } from "../../utilty/CommonHelper";
 
 export default class CardComponent extends Component<{}> {
     static propTypes = {
@@ -38,7 +37,7 @@ export default class CardComponent extends Component<{}> {
             <View style={Theming.card} key={this.props?.index}>
                 <View style={{ paddingTop: 0, padding: 15 }}>
                     <View style={{ width: '100%', alignItems: 'center', display: 'flex', justifyContent: 'space-between', flexDirection: 'row', backgroundColor: Colors.Gray, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingTop: 5, paddingBottom: 5, paddingLeft: 10, paddingRight: 10, marginBottom: 5 }}>
-                        <Text style={[Theming.card.cardTitle, { fontWeight: '600' }]}>{CommonHelper.suStringText(item?.name,8)}</Text>
+                        <Text style={[Theming.card.cardTitle, { fontWeight: '600' }]}>{item?.name}</Text>
                         <Text style={Theming.card.cardTitle}>{item?.attr?.speed + " km/h"}</Text>
                     </View>
                     <Pressable style={{ padding: 15 }} onPress={() => { this.openDetailPage(item) }}>

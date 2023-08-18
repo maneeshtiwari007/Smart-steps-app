@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Smart-steps",
+    "name": "Smart steps",
     "slug": "Smart-steps",
-    "version": "1.0.2",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,7 +26,8 @@
       },
       "googleServicesFile": "./google-services.json",
       "package": "com.smartsteps.app",
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "permissions":["ACTIVITY_RECOGNITION"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

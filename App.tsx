@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { Animated, Button, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Animated, Button, DeviceEventEmitter, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import MainLayout from "./Layout/Index";
 import Colors from "./utilty/Colors";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 //import { GTM } from './utilty/GTM';
 import CircularProgress from './components/CircularProgress';
 import { Pedometer } from 'expo-sensors';
@@ -14,6 +14,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import SplashScreen from "./screens/SplashScreen";
 import { Provider } from "react-redux";
 import store from "./store";
+import NetInfo from '@react-native-community/netinfo';
 import {
   useFonts,
   Inter_100Thin,
@@ -28,9 +29,12 @@ import {
 } from '@expo-google-fonts/inter';
 import AppLoading from 'expo-app-loading';
 import { useTheme } from "react-native-paper";
+import NetworkModal from "./screens/Modal/NetworkModal";
+import { Constant } from "./utilty/Constant";
 
 export default function App() {
   const [backGroundColor, setBackGroundColor] = useState(Colors.homeHeadColor);
+  const [isNetAvil, setIsNetAvil] = useState(true);
   let AnimateHeaderValue = new Animated.Value(0);
   const HEADER_MAX_HEIGHT = 400;
   const HEADER_MIN_HEIGHT = 90;
@@ -40,6 +44,7 @@ export default function App() {
   const Stack = createStackNavigator();
   const theme = useTheme();
   theme.colors.secondaryContainer = "transperent"
+
   const animatedHeaderBackground = AnimateHeaderValue.interpolate;
   ({
     inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
@@ -56,6 +61,12 @@ export default function App() {
     inActiveStrokeWidth: 25,
     inActiveStrokeOpacity: 0.2
   };
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsNetAvil(state?.isInternetReachable);
+      DeviceEventEmitter.emit(Constant.WIFI_NOT_AVIL,{data:state});
+    });
+  })
 
   const data = [
     {
@@ -70,7 +81,6 @@ export default function App() {
   ];
   const calculateSteps = async (e) => {
     await subscribe();
-    //console.log(e)
   }
   const subscribe = async () => {
     const isAvailable = await Pedometer.isAvailableAsync();
@@ -120,120 +130,46 @@ export default function App() {
     Inter_900Black,
   });
   if (!fontsLoaded) {
-    console.log('Loading')
   } else {
-  return (
-    // <AppContainer></AppContainer>
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="SplashScreen">
-          {/* SplashScreen which will come once for 5 Seconds */}
-          <Stack.Screen
-            name="SplashScreen"
-            component={SplashScreen}
-            // Hiding header for Splash Screen
-            options={{ headerShown: false }}
-          />
-          {/* Auth Navigator: Include Login and Signup */}
-          <Stack.Screen
-            name="Auth"
-            component={Auth}
-            options={{ headerShown: false }}
-          />
-          {/* Navigation Drawer as a landing page */}
-          <Stack.Screen
-            name="AppContainer"
-            component={AppContainer}
-            // Hiding header for Navigation Drawer
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
-    // <MainLayout>
-    //   {/* <View>
-    //     <View>
-    //       <CustomSlider data={[{},{},{}]}></CustomSlider>
-    //     </View>
-    //     <View
-    //       style={[
-    //         {
-    //           width: "100%",
-    //           height: 430,
-    //           backgroundColor: Colors.homeHeadColor,
-    //           overflow: "scroll",
-    //           alignItems: 'center',
-    //           justifyContent: 'center'
-    //         },
-    //       ]}
-    //     >
-    //       <View>
-    //         <CircularProgress
-    //           percent={80}
-    //           percentChild={20}
-    //           size={300}
-    //           ParamsParent={{ inactiveColor: Colors.CircularProgressCoinInActiveColor, activeColor: Colors.light_crystal_blue }}
-    //           ParamsChild={{ inactiveColor: Colors.CircularProgressStepsInActiveColor, activeColor: Colors.white, size: 245 }}
-    //         />
-    //       </View>
-    //       <View style={{ width:'100%',alignItems:'center' }}>
-    //         <View style={{ flexDirection: 'row',justifyContent:'space-between',width:'90%',marginTop:20,marginBottom:20 }}>
-    //           <View>
-    //             <Text>0.00 Km</Text>
-    //           </View>
-    //           <View>
-    //             <Text>0.00 coins</Text>
-    //           </View>
-    //           <View>
-    //             <Text>0 Cal</Text>
-    //           </View>
-    //         </View>
-    //       </View>
-    //     </View>
-    //     <View
-    //       style={{ borderRadius: 20, backgroundColor: Colors.primary_color }}
-    //     >
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //       <Text style={{ color: Colors.white, padding: 50 }}>
-    //         Open up App.js to start working on your app!
-    //       </Text>
-    //     </View>
-    //   </View> */}
-    //   <View>
-    //     <Button title="Start" onPress={(e) => { calculateSteps(e) }}></Button>
-    //     <Text style={{ fontSize: 18, color: '#fff' }}>Steps Count : {currentStepCount}</Text>
-    //   </View>
-    // </MainLayout>
-  );
+    return (
+      // <AppContainer></AppContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="SplashScreen" screenOptions={{gestureEnabled: false}}>
+            {/* SplashScreen which will come once for 5 Seconds */}
+            {isNetAvil &&
+              <Stack.Screen
+                name="SplashScreen"
+                component={SplashScreen}
+                // Hiding header for Splash Screen
+                options={{ headerShown: false,gestureEnabled:false }}
+              />
+            }
+            {!isNetAvil &&
+            <Stack.Screen
+              name="NetworkModal"
+              component={NetworkModal}
+              // Hiding header for Splash Screen
+              options={{ headerShown: false,gestureEnabled:false }}
+            />
+            }
+            {/* Auth Navigator: Include Login and Signup */}
+            <Stack.Screen
+              name="Auth"
+              component={Auth}
+              options={{ headerShown: false }}
+            />
+            {/* Navigation Drawer as a landing page */}
+            <Stack.Screen
+              name="AppContainer"
+              component={AppContainer}
+              // Hiding header for Navigation Drawer
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    );
   }
 }
 

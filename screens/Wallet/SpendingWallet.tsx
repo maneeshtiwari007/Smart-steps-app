@@ -43,10 +43,10 @@ export default class SpendingWallet extends Component<SpendingWalletInterface>{
                     </View>
                     <View style={{ width: '100%', alignItems: 'center' }}>
                         <View style={{ width: '95%', borderColor: Colors.white, borderRadius: 15, borderWidth: 1 }}>
-                            {this.props?.objbData?.coins?.map((item: any, index) => {
+                            {this.props?.objSpendingData?.spending?.map((item: any, index) => {
                                 return (
                                     <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: Colors.white, borderBottomWidth: ((this.props?.objbData?.coins?.length - 1) === index) ? 0 : 1, padding: 15 }}>
-                                        <Text style={{ fontSize: Colors.FontSize.f16, color: Colors.white }}>{item?.coin}</Text>
+                                        <Text style={{ fontSize: Colors.FontSize.f16, color: Colors.white }}>{item?.name}</Text>
                                         <Text style={{ fontSize: Colors.FontSize.f16, color: Colors.white }}>{item?.amount}</Text>
                                     </View>
                                 );

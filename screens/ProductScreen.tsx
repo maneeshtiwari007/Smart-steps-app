@@ -1,12 +1,11 @@
 import { Component, Key } from "react";
 import MainLayout from "../Layout/Index";
-import { Modal, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import { SegmentedControl } from '@react-native-segmented-control/segmented-control';
+import { BackHandler, DeviceEventEmitter, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../utilty/Colors";
 import { CommonApiRequest } from "../utilty/api/commonApiRequest";
 import Theming from "../utilty/styling/theming";
 import ImageComponent from "../components/Common/ImageComponent";
-import { Feather, Ionicons, AntDesign } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import ButtonComponent from "../components/Common/ButtonComponent";
 import CardComponent from "../components/Common/CardComponent";
 import Dropdown from "../components/Common/DropDown";
@@ -14,9 +13,14 @@ import { connect } from "react-redux";
 import { useSelector } from "react-redux";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { CommonHelper } from "../utilty/CommonHelper";
-import { ThemeStyling } from "../utilty/styling/Styles";
 import { LinearGradient } from "expo-linear-gradient";
+import WebView from "react-native-webview";
+import Constants from 'expo-constants';
+import { Constant } from "../utilty/Constant";
+import ServerErrorMessage from "../components/Common/ServerErrorMessage";
+
 class ProductSscreen extends Component<{}> {
+    webViewData: any = null;
     state = {
         selectedIndex: '',
         selectedIndeBuy: 0,
@@ -28,7 +32,13 @@ class ProductSscreen extends Component<{}> {
         buttonSiubmit: { label: 'Confirm', isDisable: 'false' },
         coinData: [],
         selectedProduct: {},
-        selectedCoin: {}
+        selectedCoin: {},
+        url: '',
+        token: null,
+        webView: null,
+        webViewStateData: {},
+        isWebViewBackEnable: false,
+        httpError: false
     }
     constructor(props: {} | Readonly<{}>) {
         super(props);
@@ -51,9 +61,26 @@ class ProductSscreen extends Component<{}> {
 
     }
     componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            return true;
+        });
         this.setState({ loader: true });
+        this.props.navigation.addListener('focus', () => {
+            if(this.state.httpError){
+                setTimeout(() => {
+                    this.setState({ url: CommonHelper.returnWebViewMarketPlace(this.state?.token) });
+                }, 500)
+            }
+            //this.setState({ url: CommonHelper.returnWebViewMarketPlace(this.state?.token) });
+        });
+        CommonHelper.getData('user').then((user) => {
+            if (user?.token) {
+                this.setState({ token: user?.token });
+                this.setState({ loader: false })
+                this.setState({ url: CommonHelper.returnWebViewMarketPlace(this.state?.token) });
+            }
+        })
         CommonApiRequest.storeProductCategory({}).then((response) => {
-            //console.log(response);
             if (response?.success) {
                 response?.data?.forEach((entry) => {
                     if (!this.state.allCategory?.find(item => item.label === entry)) {
@@ -87,7 +114,6 @@ class ProductSscreen extends Component<{}> {
         });
     }
     setSelected(ele) {
-        //console.log(ele);
     }
     setShowModal(type: boolean) {
         this.setState({ buyModal: type });
@@ -113,10 +139,19 @@ class ProductSscreen extends Component<{}> {
     onSelectCoin(data: any) {
         this.setState({ selectedCoin: data });
     }
+    onBackHistory() {
+        if (this.state.webViewStateData?.canGoBack) {
+            this.setState({ isWebViewBackEnable: true });
+            this?.webViewData?.goBack();
+        } else {
+            this.setState({ isWebViewBackEnable: false });
+            //this.props?.navigation?.goBack(-1);
+        }
+    }
     render() {
         return (
-            <MainLayout loaderVisible={this.state.loader} scrollEnable={true} type="light">
-                <LinearGradient
+            <MainLayout isWebViewBackEnable={this.state?.isWebViewBackEnable} loaderVisible={this.state.loader} scrollEnable={false} type="light" onBackCallback={() => { this.onBackHistory() }}>
+                {/* <LinearGradient
                     // Background Linear Gradient
                     colors={['#1aa5c6', '#0455ad']}
                     start={{ x: 0, y: 1 }}
@@ -148,10 +183,6 @@ class ProductSscreen extends Component<{}> {
                                     <Text style={{ fontSize: Colors.FontSize.f12 }}>Rent</Text>
                                 </View>
                             </View>
-                            {/* <View style={{ width: '22%' }}>
-                            <Text style={{ fontSize: Colors.FontSize.f12 }}>Filter (0)</Text>
-                            <AntDesign name="filter" size={24} color="black" />
-                        </View> */}
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -181,8 +212,8 @@ class ProductSscreen extends Component<{}> {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </LinearGradient>
-                <View style={{ height: '100%', flex: 1 }}>
+                </LinearGradient> */}
+                {/* <View style={{ height: '100%', flex: 1 }}>
                     <View style={Theming.cardContainer}>
                         {this.state.productData?.[0] && this.state?.productData?.map((item: any, index: Key) => {
                             return (
@@ -191,7 +222,50 @@ class ProductSscreen extends Component<{}> {
                         })}
 
                     </View>
-                </View>
+                </View> */}
+                {this.state?.url && !this.state?.httpError &&
+                    <WebView
+                        ref={(viewData) => { this.webViewData = viewData }}
+                        style={styles.WebViewcontainer}
+                        source={{ uri: this.state?.url }}
+                        bounces={false}
+                        onLoadStart={() => {
+                            this.setState({ loader: true })
+                        }}
+                        onLoadEnd={() => {
+                            this.setState({ loader: false })
+                        }}
+                        onLoad={() => {
+                            this.setState({ loader: false })
+                        }}
+
+                        onNavigationStateChange={(state: any) => {
+                            this.setState({ webViewStateData: state });
+                            if (state?.url?.includes("smartapp.coin.update")) {
+                                DeviceEventEmitter.emit(Constant.REFRESH_COINT_EVENT, { data: 'data' });
+                                this.setState({ url: null });
+                                setTimeout(() => {
+                                    this.setState({ url: CommonHelper.returnWebViewMarketPlace(this.state?.token) });
+                                }, 500)
+                            }
+                            if (state?.url?.includes(Constant.check_market_place_url)) {
+                                this.setState({ isWebViewBackEnable: false });
+                            } else {
+                                this.setState({ isWebViewBackEnable: true });
+                            }
+                        }}
+                        onError={() => {
+                            this.setState({ loader: false });
+                            this.setState({ url: null, httpError: true })
+                        }}
+                        onHttpError={() => {
+                            this.setState({ loader: false });
+                        }}
+                    />
+                }
+                {!this.state?.url && this.state?.httpError &&
+                    <ServerErrorMessage />
+                }
                 {this.state?.buyModal &&
                     <Modal
                         animationType={'slide'}
@@ -215,7 +289,7 @@ class ProductSscreen extends Component<{}> {
                                 <View style={{ marginTop: 25, width: '100%' }}>
                                     <View>
                                         <View style={{ width: '100%', alignItems: 'center', display: 'flex', justifyContent: 'space-between', flexDirection: 'row', backgroundColor: Colors.Gray, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingTop: 5, paddingBottom: 5, paddingLeft: 10, paddingRight: 10, marginBottom: 5 }}>
-                                            <Text style={[Theming.card?.cardTitle, { fontWeight: 600 }]}>{CommonHelper.suStringTextthis.state.selectedProduct?.name}</Text>
+                                            <Text style={[Theming.card.cardTitle, { fontWeight: 600 }]}>{this.state.selectedProduct?.name}</Text>
                                             <Text style={Theming.card.cardTitle}>{this.state.selectedProduct?.attr?.speed + " km/h"}</Text>
                                         </View>
                                         <Pressable style={{ padding: 15 }}>
@@ -272,6 +346,11 @@ const styles = StyleSheet.create({
     text: {
         color: '#3f2949',
         marginTop: 10,
+    },
+    WebViewcontainer: {
+        height: Dimensions.get('window').height,
+        width: '100%',
+        paddingTop: 100
     },
 });
 const mapStateToState = state => ({

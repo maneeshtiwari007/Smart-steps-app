@@ -7,7 +7,6 @@ export const ThemeStyling = StyleSheet.create({
   container: {
     padding: 15,
     textAlign: 'center',
-    minHeight: '100%',
     justifyContent: "center",
     fontFamily:'Inter_400Regular',
   },
@@ -81,12 +80,14 @@ export const ThemeStyling = StyleSheet.create({
     alignItems:'center'
   },
   btnprimary: {
-    backgroundColor: '#ffcc00',
+    //backgroundColor:'rgba(255,255,255,0.8)',
     borderRadius: 100,
-    padding: 12,
+    //padding: 12,
     textAlign: "center",
     height: 50,
-    width:'90%'
+    width:'90%',
+    alignItems:'center',
+    justifyContent:'center'
   },
   btnText: {
     textAlign: "center",
@@ -94,13 +95,16 @@ export const ThemeStyling = StyleSheet.create({
     fontFamily: 'Inter_600SemiBold',
     fontWeight: '600',
     textTransform: 'capitalize',
-    color: '#000000',
+    color: 'rgba(255,255,255,1)',
+
   },
   fixedbottom: {
     justifyContent: "center",
     alignItems: "center"
   },
   btnprimarydisable:{
-    backgroundColor: '#898576',
+    //backgroundColor: '#898576',
+    //backgroundColor:'rgba(255,255,255,0.5)'
+    width:'100%',
   }
 });

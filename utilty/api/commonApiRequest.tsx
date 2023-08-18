@@ -157,5 +157,30 @@ export const CommonApiRequest = {
       // returning the product returned by the API
       return response?.data
     },
+    customerEventStart: async function (params:any, cancel = false) {
+      const response:any = await api.request({
+          url: `/Customer/event/start`,
+          method: "GET",
+        // retrieving the signal value by using the property name
+        signal: cancel ? cancelApiObject['userLogin'].handleRequestCancellation().signal : undefined,
+      })
+      // returning the product returned by the API
+      return response?.data
+    },
+    walletValidate: async function (params:any, cancel = false) {
+      const response:any = await api.request({
+          url: `/Wallet/validate`,
+          method: "POST",
+          data:params,
+        // retrieving the signal value by using the property name
+        signal: cancel ? cancelApiObject['userLogin'].handleRequestCancellation().signal : undefined,
+      })
+      if(response?.data){
+        // store.dispatch(wallet_data_status(false));
+        // store.dispatch(wallet_data(response?.data));
+      }
+      // returning the product returned by the API
+      return response?.data
+    },
 }
 const cancelApiObject = defineCancelApiObject(CommonApiRequest)

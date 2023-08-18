@@ -1,21 +1,28 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Constant } from "./Constant";
 
 export const CommonHelper = {
     registerValidation: async function (params: any) {
         var emailValidation: boolean = false;
         var passwordValidation: boolean = false;
+        var confirmPasswordValidation: boolean = false;
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-        var passwordReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-        if (reg.test(params?.email) !== false) {
+        //var passwordReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+        var passwordReg = /(.|\s)*\S(.|\s)*/;
+        if (params?.email!=="") {
             emailValidation = true;
         }
         if (passwordReg.test(params?.password) !== false) {
             passwordValidation = true;
         }
+        if(params?.password === params?.confirm_password){
+            confirmPasswordValidation=true;
+        }
         return {
             email: emailValidation,
             password: passwordValidation,
-            isValidated: (emailValidation && passwordValidation) ? true : false
+            confirm_password:confirmPasswordValidation,
+            isValidated: (emailValidation && passwordValidation && confirmPasswordValidation) ? true : false
         };
     },
     saveData: async function(key,value){
@@ -33,7 +40,10 @@ export const CommonHelper = {
         }
     },
     returnWebViewUrl(token:any){
-        return "http://103.129.97.123:5001/SmartStep/login?token="+token;
+        return Constant.static_webview_url+token;
+    },
+    returnWebViewHomeUrl(token:any){
+        return "http://103.129.97.123:5001/step.ashx?date="+token;
     },
     async formatBuyProductData(data:any,coin:any){
         return {
@@ -45,12 +55,23 @@ export const CommonHelper = {
             paymentMethod:"CryptoCurrency"
         }
     },
-    suStringText(mytextvar:string,maxlimit:number){
-        console.log((mytextvar).length);
-        console.log(maxlimit);
-        console.log((mytextvar).substring(0,maxlimit-3));
-       return ((mytextvar).length > maxlimit) ? 
-        (((mytextvar).substring(0,maxlimit-3)) + '...') : 
-        mytextvar
+    returnWebViewMarketPlace(token:any){
+        return Constant.wallet_webview_url+token;
+    },
+    returnWebViewNft(token:any){
+        return Constant.nft_webview_url+token;
+    },
+    returnWebViewWallet(authPass:string,token:any){
+        console.log(token);
+        return Constant.wallet_view_webview_url+authPass+'&token='+token;
+    },
+    returnWebViewSports(token:any){
+        return Constant.sports_webview_url+token;
+    },
+    returnWebViewSupport(token:any){
+        return Constant.suport_webview_url+token;
+    },
+    returnWebViewProfile(token:any){
+        return Constant.profile_webview_url+token;
     }
 }

@@ -7,4 +7,8 @@ export default interface SecuredWalletInterface {
     disablePad?:boolean;
     onCloseModal?;
     dataCallBack?;
+    title?:string;
+    subTitle?:string;
+    confirmData?:string
+    isConfirmModal?:boolean
 }

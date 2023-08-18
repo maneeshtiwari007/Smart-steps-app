@@ -27,7 +27,11 @@ import DetailScreen from "../../screens/Product/DetailScreen";
 import UserWalletScreen from "../../screens/Wallet/UserWalletScreen";
 import StaticSCreen from "../../screens/StaticScreen";
 import CustomerProductScreen from "../../screens/Product/CustomerProductScreen";
-import { transparent } from "react-native-paper/lib/typescript/src/styles/themes/v2/colors";
+import OtherRoutes, { OtherRoutesHome, OtherRoutesNft, OtherRoutesProduct, OtherRoutesWallet } from "./OtherRoutes";
+import Suport from "../../screens/Suport";
+import Profile from "../../screens/Profile";
+import PedometerScreen from "../../screens/Modal/PedometerScreen";
+import NetworkModal from "../../screens/Modal/NetworkModal";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -71,6 +75,19 @@ export default class AppContainer extends Component<{}> {
       </Stack.Navigator>
     )
   }
+  HeaderScreenStack(){
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeSscreen}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="WalletScreen" component={UserWalletScreen}
+        ></Stack.Screen>
+      </Stack.Navigator>
+    );
+  }
   BottomTabStack() {
     return (
       <>
@@ -78,51 +95,46 @@ export default class AppContainer extends Component<{}> {
           initialRouteName="Home"
           activeColor={Colors.light_crystal_blue}
           inactiveColor={Colors.primary_color}
-          barStyle={{ height:85,backgroundColor: '#fff'}}
-          labeled={false}
+          barStyle={{ height:75,backgroundColor: Colors.white}}
+          labeled={true}
         >
           <Tab.Screen
-            name="Home"
-            component={HomeSscreen}
-
+            name="Homes"
+            component={OtherRoutesHome}
             options={{
               tabBarLabel: "",
               tabBarIcon: ({ focused,color }) => (
-                //<FontAwesome5 name="running" size={26} color={color} />
                 <Image source={(focused)?require('../../assets/staticimages/running-man-blue.png'):require('../../assets/staticimages/running-man-black.png')} style={{ height:40,width:40 }}/>
               ),
             }}
           />
           <Tab.Screen
-            name="NFT"
-            component={CustomerProductScreen}
+            name="NFTs"
+            component={OtherRoutesNft}
             options={{
               tabBarLabel: "",
               tabBarIcon: ({ focused,color }) => (
-                // <MaterialCommunityIcons name="shoe-sneaker" size={26} color={color} />
                 <Image source={(focused)?require('../../assets/staticimages/shoe-blue.png'):require('../../assets/staticimages/shoe-black.png')} style={{ height:40,width:40 }}/>
               ),
               tabBarAccessibilityLabel:"NFT"
             }}
           />
           <Tab.Screen
-            name="Notification"
-            component={StaticSCreen}
+            name="Notifications"
+            component={OtherRoutesWallet}
             options={{
               tabBarLabel: "",
               tabBarIcon: ({ focused,color }) => (
-                //<MaterialCommunityIcons name="bell-outline" color={color} size={26} />
                 <Image source={(focused)?require('../../assets/staticimages/user-star-blue.png'):require('../../assets/staticimages/user-star-black.png')} style={{ height:40,width:40 }}/>
               ),
             }}
           />
           <Tab.Screen
-            name="Products"
-            component={ProductSscreen}
+            name="Productss"
+            component={OtherRoutesProduct}
             options={{
               tabBarLabel: "",
               tabBarIcon: ({ focused,color }) => (
-                //<MaterialCommunityIcons name="cart-outline" size={26} color={color} />
                 <Image source={(focused)?require('../../assets/staticimages/cart-moving-blue.png'):require('../../assets/staticimages/cart-moving-black.png')} style={{ height:40,width:40 }}/>
               ),
             }}
@@ -136,10 +148,13 @@ export default class AppContainer extends Component<{}> {
     return (
       <Stack.Navigator
         initialRouteName="HomeScreen"
-        screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="BottomTabStack" component={this.BottomTabStack} />
-        <Stack.Screen name="ProductDetailScreen" component={DetailScreen}></Stack.Screen>
-        <Stack.Screen name="WalletScreen" component={UserWalletScreen}></Stack.Screen>
+        screenOptions={{ headerShown: false,gestureEnabled: false }}>
+        <Stack.Screen name="BottomTabStack" component={this.BottomTabStack} options={{gestureEnabled:false}}/>
+        <Stack.Screen name="ProductDetailScreen" component={DetailScreen} options={{gestureEnabled:false}}></Stack.Screen>
+        <Stack.Screen name="WalletScreen" component={UserWalletScreen}  options={{gestureEnabled:false}}/>
+        <Stack.Screen name="Suport" component={Suport}  options={{gestureEnabled:false}}/>
+        <Stack.Screen name="Profile" component={Profile}  options={{gestureEnabled:false}}/>
+        <Stack.Screen name="Pedometer" component={PedometerScreen}  options={{gestureEnabled:false}}/>
       </Stack.Navigator>
     );
   };
@@ -153,7 +168,6 @@ export default class AppContainer extends Component<{}> {
     );
   };
   Logout = () => {
-    alert('Hi');
     this.props?.navigation.navigate("LoginScreen");
     return ("");
   }

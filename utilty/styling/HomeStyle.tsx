@@ -4,9 +4,8 @@ import { convertArea } from "geolib";
 
 export const HomeStyle = StyleSheet.create({
     bgHome: {
-        flex: 1,
-        resizeMode: 'cover',
         justifyContent: 'center',
+        flex:1,
     },
     progressBarGroup: {
         flexDirection: 'row',
@@ -55,20 +54,20 @@ export const HomeStyle = StyleSheet.create({
         height: 60,
     },
     pedometerText: {
-        fontSize: Colors.FontSize.f18,
+        fontSize: Colors.FontSize.f20,
         fontFamily: 'Inter_700Bold',
         fontWeight: '700',
         color: Colors.white,
     },
     totalSpeed: {
-        fontSize: Colors.FontSize.f30,
+        fontSize: Colors.FontSize.h1,
         fontFamily: 'Inter_700Bold',
         fontWeight: '700',
         color: Colors.white,
         marginBottom: 10,
     },
     pedometerSpeed: {
-        fontSize: Colors.FontSize.f12,
+        fontSize: Colors.FontSize.f20,
         fontFamily: 'Inter_600SemiBold',
         fontWeight: '600',
         color: Colors.white,
@@ -104,15 +103,13 @@ export const HomeStyle = StyleSheet.create({
         color: Colors.white,
     },
     bgPattern: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
+        zIndex:99
     },
     threeColLayout:{
         flexDirection: "row",
         justifyContent: 'space-between',
-        paddingBottom: 0,
+        paddingBottom: 70,
+        paddingTop: 30,
         alignItems: "center",
     },
     col3:{
@@ -125,6 +122,5 @@ export const HomeStyle = StyleSheet.create({
     },
     fontIcon2:{
         fontSize:100,
-        color: Colors.primary_color,
     }
 });
